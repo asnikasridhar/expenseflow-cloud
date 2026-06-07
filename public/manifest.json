@@ -1,1 +1,9 @@
-{"name": "ExpenseFlow", "short_name": "ExpenseFlow", "start_url": "./", "display": "standalone"}
+{
+  "name": "ExpenseFlow Cloud",
+  "short_name": "ExpenseFlow",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#eef4f8",
+  "theme_color": "#17324d",
+  "icons": []
+}

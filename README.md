@@ -1,40 +1,30 @@
-# ExpenseFlow Cloudflare Pages FIXED PUBLIC package
+# ExpenseFlow Cloud Production V1
 
-This package fixes the 404 issue by using Cloudflare's safer static-file layout:
+Upload this exact structure to GitHub:
 
-public/index.html
-public/style.css
-public/app.js
-public/manifest.json
-functions/api/[[path]].js
+public/
+  index.html
+  style.css
+  app.js
+  manifest.json
+  _headers
 
-## Cloudflare settings
+functions/api/
+  [[path]].js
 
-Go to your Pages project:
+Cloudflare Pages settings:
+- Build command: empty
+- Build output directory: public
+- Root directory: /
 
-Settings → Builds and deployments
+Cloudflare bindings:
+- D1 binding variable name: DB
+- Database: expenseflow-db
 
-Set:
+Cloudflare variable:
+- APP_PIN = 1234 or your private PIN
 
-Framework preset: None
-Build command: leave empty
-Build output directory: public
-Root directory: /
-
-Then redeploy.
-
-## Required bindings
-
-Settings → Bindings:
-Type: D1 Database
-Variable name: DB
-Database: expenseflow-db
-
-Settings → Variables and secrets:
-APP_PIN = 1234
-
-## Why you got 404
-
-Your deployment succeeded, but Cloudflare did not publish any static assets at the root URL.
-That usually means the build output directory did not point to the folder containing index.html.
-This package puts index.html inside public/ and you must set Build output directory to public.
+After deployment:
+1. Open https://expenseflow-cloud.pages.dev
+2. Login with APP_PIN
+3. Use Backup tab -> Seed May/June Demo Data if needed.

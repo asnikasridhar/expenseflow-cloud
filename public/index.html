@@ -1,4 +1,159 @@
 <!doctype html>
-<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ExpenseFlow</title><style>body{font-family:Arial;padding:24px;background:#eef4f8} .card{background:#fff;padding:20px;border-radius:16px}</style></head>
-<body><div class="card"><h1>ExpenseFlow</h1><p>If you see this page, Cloudflare Pages static hosting is working.</p></div></body></html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>ExpenseFlow Cloud</title>
+  <link rel="manifest" href="manifest.json"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<header>
+  <div>
+    <p>Cloud Family Finance Tracker</p>
+    <h1>ExpenseFlow</h1>
+  </div>
+  <input id="monthPicker" type="month"/>
+</header>
+
+<div id="login" class="login">
+  <div class="card">
+    <h2>Login</h2>
+    <p>Enter your app PIN.</p>
+    <input id="pinInput" type="password" placeholder="APP_PIN"/>
+    <button id="loginBtn" class="primary">Open App</button>
+  </div>
+</div>
+
+<nav id="nav" class="hidden">
+  <button data-screen="dashboard" class="active">Dashboard</button>
+  <button data-screen="add">Add</button>
+  <button data-screen="expenses">Expenses</button>
+  <button data-screen="budget">Budget</button>
+  <button data-screen="partner">Partner</button>
+  <button data-screen="loan">Loan</button>
+  <button data-screen="backup">Backup</button>
+</nav>
+
+<main id="main" class="hidden">
+  <section id="dashboard" class="screen active">
+    <div class="hero">
+      <p id="monthLabel">Selected Month</p>
+      <h2 id="surplusKpi">₹0</h2>
+      <span>Monthly surplus</span>
+    </div>
+
+    <div class="grid">
+      <div class="card"><span>Income</span><strong id="incomeKpi">₹0</strong></div>
+      <div class="card"><span>Expenses</span><strong id="expenseKpi">₹0</strong></div>
+      <div class="card"><span>Savings Rate</span><strong id="rateKpi">0%</strong></div>
+      <div class="card"><span>Budget Used</span><strong id="budgetKpi">0%</strong></div>
+    </div>
+
+    <div class="card">
+      <h2>Budget vs Actual</h2>
+      <div id="budgetBars"></div>
+    </div>
+
+    <div class="card">
+      <h2>Partner Split</h2>
+      <div id="partnerSplit"></div>
+    </div>
+
+    <div class="card">
+      <h2>Month Comparison</h2>
+      <div id="monthCompare"></div>
+    </div>
+  </section>
+
+  <section id="add" class="screen">
+    <form id="expenseForm" class="card">
+      <h2 id="formTitle">Add Expense</h2>
+      <input type="hidden" id="editingId"/>
+      <label>Date<input id="date" type="date" required></label>
+      <label>Paid By<select id="paidBy"></select></label>
+      <label>Amount<input id="amount" type="number" required></label>
+      <label>Category<select id="category"></select></label>
+      <label>Payment Mode
+        <select id="payment">
+          <option>UPI</option><option>Cash</option><option>Card</option><option>Bank Transfer</option><option>Wallet</option>
+        </select>
+      </label>
+      <label>Description<input id="description" placeholder="Milk, EMI, prepayment..."></label>
+      <label>Reimbursement<select id="reimburse"><option>No</option><option>Yes</option></select></label>
+      <button class="primary" type="submit" id="saveExpense">Save Expense</button>
+      <button type="button" id="cancelEdit" class="secondary hidden">Cancel Edit</button>
+    </form>
+
+    <div class="card">
+      <h2>Quick Add</h2>
+      <div id="quickAdd" class="quick"></div>
+    </div>
+  </section>
+
+  <section id="expenses" class="screen">
+    <div class="card">
+      <div class="row-title">
+        <h2>Monthly Expenses</h2>
+        <button id="clearMonth" class="danger">Clear Month</button>
+      </div>
+      <div id="expenseList"></div>
+    </div>
+  </section>
+
+  <section id="budget" class="screen">
+    <div class="card">
+      <div class="row-title">
+        <h2>Budget Items</h2>
+        <button id="addBudget" class="secondary">Add Item</button>
+      </div>
+      <div id="budgetEditor"></div>
+    </div>
+  </section>
+
+  <section id="partner" class="screen">
+    <div class="card">
+      <h2>Partner Setup</h2>
+      <label>Person A Name<input id="personA"></label>
+      <label>Person P Name<input id="personP"></label>
+      <label>A Monthly Income<input id="incomeA" type="number"></label>
+      <label>P Monthly Income<input id="incomeP" type="number"></label>
+      <button id="savePartner" class="primary">Save Partner</button>
+    </div>
+  </section>
+
+  <section id="loan" class="screen">
+    <div class="card">
+      <h2>Loan Tracker</h2>
+      <label>Original Loan<input id="loanOriginal" type="number"></label>
+      <label>Outstanding Balance<input id="loanBalance" type="number"></label>
+      <label>EMI<input id="loanEmi" type="number"></label>
+      <label>Interest Rate %<input id="loanRate" type="number" step="0.01"></label>
+      <button id="saveLoan" class="primary">Save Loan</button>
+    </div>
+
+    <div class="card">
+      <div class="row-title">
+        <h2>Prepayment Options</h2>
+        <button id="addPrepay" class="secondary">Add Option</button>
+      </div>
+      <div id="prepayList"></div>
+    </div>
+  </section>
+
+  <section id="backup" class="screen">
+    <div class="card">
+      <h2>Cloud Backup</h2>
+      <p>Data is stored in Cloudflare D1 and syncs across devices.</p>
+      <button id="exportCsv" class="primary">Export CSV</button>
+      <button id="logout" class="secondary">Logout</button>
+      <button id="seedDemo" class="secondary">Seed May/June Demo Data</button>
+      <button id="resetDemo" class="danger">Reset Database</button>
+    </div>
+  </section>
+</main>
+
+<div id="toast"></div>
+<script src="app.js"></script>
+</body>
+</html>
